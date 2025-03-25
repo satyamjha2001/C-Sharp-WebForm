@@ -1,0 +1,30 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="MasterPage.master.cs" Inherits="Master_Page_Demo.MasterPage" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <link href="Css\Style.css" rel="stylesheet" />
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div class="wrapper">
+            <div class="header">
+                <%--<h1>This is the header of my new website !!</h1>--%>
+                <img src="images/Screenshot (41).png" />
+            </div>
+            <div class="content">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+
+            </asp:ContentPlaceHolder>
+            </div>
+            <div class="footer">
+                <h3>All rights reserved &copy; 2025</h3>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
