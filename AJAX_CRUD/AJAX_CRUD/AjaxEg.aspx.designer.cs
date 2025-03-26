@@ -11,7 +11,7 @@ namespace AJAX_CRUD
 {
 
 
-    public partial class WebForm1
+    public partial class Default
     {
 
         /// <summary>
