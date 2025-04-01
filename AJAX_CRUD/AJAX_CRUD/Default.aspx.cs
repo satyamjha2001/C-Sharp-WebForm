@@ -13,7 +13,13 @@ namespace AJAX_CRUD
     public partial class WebForm1 : System.Web.UI.Page
     {
 
-
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!IsPostBack)
+            {
+                hiddenUserId.Value = "";
+            }
+        }
         private void reset()
         {
             txtName.Text = "";
@@ -41,12 +47,6 @@ namespace AJAX_CRUD
         {
             args.IsValid = chkCricket.Checked || chkFootball.Checked || chkReading.Checked || chkMovies.Checked;
         }
-
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            
-        }
-
 
 
         protected bool Validation()
@@ -79,11 +79,6 @@ namespace AJAX_CRUD
             return true;
         }
 
-        protected void btnEdit_Click()
-        {
-            Response.Write("<script></script>");
-        }
-
 
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
@@ -100,7 +95,22 @@ namespace AJAX_CRUD
                     db.Open();
 
                     string hobbies = GetHobbies();
-                    using (SqlCommand cmd = new SqlCommand("dbo.Usp_Insert", db))
+
+                    string query;
+                    bool isUpdate = !string.IsNullOrEmpty(hiddenUserId.Value);
+
+                    if (isUpdate)
+                    {
+                        //query = "UPDATE Users SET Name = @Name, Mobile = @Mobile, Email = @Email, Gender = @Gender, Hobbies = @Hobbies, DOB = @DOB WHERE Id = @Id";
+
+                        query = "dbo.Usp_Update";
+                    }
+                    else
+                    {
+                        //query = "INSERT INTO Users (Name, Mobile, Email, Gender, Hobbies, DOB) VALUES (@Name, @Mobile, @Email, @Gender, @Hobbies, @DOB)";
+                        query = "dbo.Usp_Insert";
+                    }
+                    using (SqlCommand cmd = new SqlCommand(query, db))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@Name", txtName.Text);
@@ -110,18 +120,24 @@ namespace AJAX_CRUD
                         cmd.Parameters.AddWithValue("@Hobbies", hobbies);
                         cmd.Parameters.AddWithValue("@DOB", txtDOB.Text);
 
+                        if (isUpdate)
+                        {
+                            cmd.Parameters.AddWithValue("@Id", hiddenUserId.Value);
+                        }
+
                         int m = cmd.ExecuteNonQuery();
                         if (m > 0)
                         {
-                            Response.Write("<script>alert('data inserted successfully!')</script>");
+                            Response.Write("<script>alert('data saved successfully!')</script>");
                         }
                         else
                         {
-                            Response.Write("<script>alert('data insertion failed!!')</script>");
+                            Response.Write("<script>alert('Operation failed!!')</script>");
                         }
                     }
                 }
                 reset();
+                hiddenUserId.Value = "";
             }
         }
 
@@ -155,5 +171,56 @@ namespace AJAX_CRUD
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             return serializer.Serialize(userList);
         }
+
+        [WebMethod]
+        public static string GetUserById(int id)
+        {
+            string con = "Data Source=.;Initial Catalog=User;Integrated Security=True;";
+            DataTable dt = new DataTable();
+            using (SqlConnection db = new SqlConnection(con))
+            {
+                db.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT * FROM Users WHERE Id = @Id", db))
+                {
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
+                }
+            }
+
+            if (dt.Rows.Count > 0)
+            {
+                DataRow row = dt.Rows[0];
+                var user = new Dictionary<string, object>();
+                foreach (DataColumn col in dt.Columns)
+                {
+                    user[col.ColumnName] = row[col];
+                }
+                return new JavaScriptSerializer().Serialize(user);
+            }
+            return null;
+        }
+
+        [WebMethod]
+        public static string DeleteUser(int id)
+        {
+            string result = "Error";
+            string con = "Data Source=.;Initial Catalog=User;Integrated Security=True;";
+
+            using (SqlConnection db = new SqlConnection(con))
+            {
+                db.Open();
+                using (SqlCommand cmd = new SqlCommand("dbo.Usp_Delete", db))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    result = rowsAffected > 0 ? "Success" : "Error";
+                }
+            }
+
+            return new JavaScriptSerializer().Serialize(new { status = result });
+        }
+
     }
 }

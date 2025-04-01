@@ -22,15 +22,23 @@
 });
 
 function formatJSONDate(jsonDate) {
-    var timestamp = +jsonDate.slice(6, -2); // Extracts the numeric timestamp
-    var date = new Date(timestamp);
-    return date.toISOString().split('T')[0]; // Returns YYYY-MM-DD
+    try {
+       
+        if (!jsonDate) return "";
+        if (jsonDate.includes("/Date(")) {
+            var date = new Date(parseInt(jsonDate.substr(6)));
+            return date.toISOString().split('T')[0];
+        }
+        return jsonDate.split('T')[0]; 
+    } catch (e) {
+        console.error("Date formatting error:", e);
+        return "";
+    }
 }
-
-
 
 $(function () {
     function loadUserData() {
+        debugger;
         $.ajax({
             type: "POST",
             url: "Default.aspx/GetUserData",
@@ -39,7 +47,7 @@ $(function () {
             success: function (response) {
                 var users = JSON.parse(response.d);
                 var rows = "";
-                users.forEach(function (user, index) {
+                users.forEach(function (user) {
                     rows += `<tr>
                         <td>${user.Name}</td>
                         <td>${user.Mobile}</td>
@@ -48,8 +56,9 @@ $(function () {
                         <td>${user.Hobbies}</td>
                         <td>${formatJSONDate(user.DOB)}</td>
                         <td>
-                            <button class="edit-btn" data-index="${index}">Edit</button>
-                            <button class="delete-btn" data-index="${index}">Delete</button>
+                            <input type="button" class="edit-btn" value="Edit" data-id="${user.Id}">
+                           <button type="button" class="delete-btn" data-id="${user.Id}">Delete</button>
+
                         </td>
                     </tr>`
                 });
@@ -63,11 +72,75 @@ $(function () {
 
     // Load data on page load
     loadUserData();
+    
+    
+
+    // Edit button click event
+    $(document).on("click", ".edit-btn", function (e) {
+        e.preventDefault();
+        var userId = $(this).data("id");
+
+        $.ajax({
+            type: "POST",
+            url: "Default.aspx/GetUserById",
+            data: JSON.stringify({ id: userId }),
+            contentType: "application/json;",
+            dataType: "json",
+            success: function (response) {
+                var user = JSON.parse(response.d);
+  
+                $("#txtName").val(user.Name);
+                $("#txtMobile").val(user.Mobile);
+                $("#txtEmail").val(user.Email);
+                $("#DropDownGender").val(user.Gender);
+                $("#txtDOB").val(formatJSONDate(user.DOB));
+
+     
+                var hobbies = user.Hobbies.split(", ");
+                $("#chkCricket").prop("checked", hobbies.includes("Cricket"));
+                $("#chkFootball").prop("checked", hobbies.includes("Football"));
+                $("#chkReading").prop("checked", hobbies.includes("Reading"));
+                $("#chkMovies").prop("checked", hobbies.includes("Movies"));
+
+     
+                $("#hiddenUserId").val(user.Id);
+            },
+            error: function () {
+                alert("Error fetching data.");
+            }
+        });
+    });
+
+    // Delete button click event
+    $(document).on("click", ".delete-btn", function () {
+        
+        var userId = $(this).data("id");
+
+        if (confirm("Are you sure you want to delete this user?")) {
+            $.ajax({
+                type: "POST",
+                url: "Default.aspx/DeleteUser",
+                data: JSON.stringify({ id: userId }),
+                contentType: "application/json;",
+                dataType: "json",
+                success: function (response) {
+                        loadUserData();
+                        alert("User deleted successfully!");  
+                },
+                error: function () {
+                    alert("Error deleting user....");
+                }
+            });
+        }
+
+        
+    });
 
     // Reload data on form submission
-    $("#btnSubmit").click(function (e) {
-        loadUserData();
-    });
+    //$("#btnSubmit").click(function () {
+    //    //loadUserDat
+    //    location.reload();
+    //});
 
     $("#userTable").css({
         "borderCollapse": "collapse"

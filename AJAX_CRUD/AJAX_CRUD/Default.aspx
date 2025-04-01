@@ -80,8 +80,11 @@
                 </tr>
             </table>
         </div>
+        <asp:HiddenField ID="hiddenUserId" runat="server" ClientIDMode="Static" />
+
+
         <h3>Stored User Data</h3>
-        <table id="userTable" border="2">
+        <table id="userTable" border="1">
             <thead>
                 <tr>
                     <th>Name</th>
