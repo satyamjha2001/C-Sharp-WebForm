@@ -24,20 +24,14 @@ namespace ThreeLayeredArchitecture
         {
             try
             {
-                using (SqlConnection con = new SqlConnection("Data Source=.;Initial Catalog=ThreeTierDB;Integrated Security=True"))
+                DataTable dt = balObj.GetAllCourses();
+
+                if (dt.Rows.Count > 0)
                 {
-                    using (SqlCommand cmd = new SqlCommand("dbo.Usp_GetAllCourse", con))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        con.Open();
-                        using (SqlDataReader dr = cmd.ExecuteReader())
-                        {
-                            ddlCourse.DataSource = dr;
-                            ddlCourse.DataTextField = "CourseName";
-                            ddlCourse.DataValueField = "Cid";
-                            ddlCourse.DataBind();
-                        }
-                    }
+                    ddlCourse.DataSource = dt;
+                    ddlCourse.DataTextField = "CourseName";
+                    ddlCourse.DataValueField = "Cid";
+                    ddlCourse.DataBind();
                 }
                 ddlCourse.Items.Insert(0, new ListItem("Choose", "0"));
             }

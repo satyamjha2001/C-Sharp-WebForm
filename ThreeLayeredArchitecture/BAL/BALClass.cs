@@ -19,7 +19,7 @@ namespace BAL
 
         public DataTable SelectStudent()
         {
-            return (DataTable)dalObj.getDetail();
+            return dalObj.getDetail();
         }
 
         public void UpdateStudent(int sid, string name, string email, decimal fees, int cId)
@@ -30,6 +30,11 @@ namespace BAL
         public void RemoveStudent(int sid)
         {
             dalObj.DeleteDetail(sid);
+        }
+
+        public DataTable GetAllCourses()
+        {
+            return dalObj.getCourses();
         }
     }
 }

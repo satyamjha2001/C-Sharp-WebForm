@@ -32,7 +32,7 @@ namespace DALayer
             }
         }
 
-        public object getDetail()
+        public DataTable getDetail()
         {
             try
             {
@@ -102,6 +102,25 @@ namespace DALayer
             }
         }
 
+        public DataTable getCourses()
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection("Data Source=.;Initial Catalog=ThreeTierDB;Integrated Security=True;"))
+                {
+                    SqlCommand cmd = new SqlCommand("dbo.Usp_GetAllCourse", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    return dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in GetCourses :" + ex.Message);
+            }
+        }
 
     }
 }
