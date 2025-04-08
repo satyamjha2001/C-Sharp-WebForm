@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    // Layout = "~/Views/Shared/_Layout.cshtml"; //for master layout connection
+    // Layout = "~/Views/Shared/_Layout2.cshtml"; // giving priority over viewstart
+    Layout = null;  // not take any layout
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<h1>Index Page</h1>
+<p>This is my Home Page.</p>
+
+
+@* <h1>Initial Server Time: @DateTime.Now</h1>
+<h1>Current Year is @DateTime.Now.Year</h1>
+
+<h2 id="liveTime"></h2>
+@* <h2 id="liveTime2"></h2>
+
+@*multi cs lines
+@{
+    var name = "Satyam Kumar Jha";
+    var company = "Yoctel";
+    var position = "Software Developer Intern";
+}
+
+<h2>Name : @name</h2>
+<h2>Company : @company</h2>
+<h2>Position : @position</h2>
+
+@*if else use
+
+@{
+    var MyName = "Satyam";
+    if(MyName.Equals("Satyam"))
+    {
+        <h3>Hey @MyName</h3>
+    }
+    else
+    {
+        <h3>Get Out...</h3>
+    }
+}
+
+@* For loops 
+@{
+    for (int i = 1; i <= 10; i++)
+    {
+        <span>@i</span>
+    }
+}
+
+@* For each 
+@{
+    string[] names = {"Ram", "Shyam", "Karan", "Arjun"};
+    <h3>
+    @{foreach(string n in names)
+    {
+        <span>@n</span>
+    }}
+    </h3>
+}
+
+<script>
+    const dateElement = document.getElementById('liveTime');
+
+    function updateTime() {
+        const now = new Date();
+        dateElement.innerHTML = "Current Date and Time is " + now.toLocaleString();
+    }
+
+    setInterval(updateTime, 1000);
+    updateTime(); //Call once immediately
+
+    //jquery
+
+    // $(function(){
+    //     const date = $('#liveTime2');
+
+    //     function update(){
+    //         date.html("Current Date and Time is " + new Date().toLocaleString());
+    //     }
+    //     setInterval(update,1000);
+    //     update();
+    // })
+</script> 
+
+*@
