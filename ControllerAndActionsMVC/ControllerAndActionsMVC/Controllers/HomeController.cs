@@ -9,6 +9,35 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
+        //sending data from controller to view by viewData
+
+        ViewBag.data1 = "Satyam";
+        ViewBag.data = 542;
+        ViewBag.data3 = DateTime.Now.ToLongDateString();
+
+        ViewData["check"] = "ViewBag and ViewData can use interchangebly";
+        ViewBag.check1 = "in home and controller";
+
+        string[] arr = { "Ram", "satyam", "aman" };
+        ViewBag.data4 = arr;
+
+        ViewBag.data5 = new List<string>()
+        {
+            "Hockey", "Cricket", "Football"
+        };
+
+        //ViewData["data1"] = "Satyam";
+        //ViewData["data2"] = 542;
+        //ViewData["data3"] = DateTime.Now.ToLongDateString();
+
+        //string[] arr = { "Ram","satyam","aman" };
+        //ViewData["data4"] = arr;
+
+        //ViewData["data5"] = new List<string>()
+        //{ 
+        //    "Hockey", "Cricket", "Football" 
+        //};
+
         return View();  // by default or home/index
     }
 

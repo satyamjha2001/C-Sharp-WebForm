@@ -9,6 +9,55 @@
 <h1>Index Page</h1>
 <p>This is my Home Page.</p>
 
+@ViewBag.data1
+<br />
+@ViewBag.data2
+<br />
+@ViewBag.data3
+<br />
+
+@ViewBag.check
+@ViewData["check1"]
+<br />
+@{
+    foreach (string i in ViewBag.data4)
+    {
+        <h3>@i</h3>
+    }
+
+    foreach (string i in ViewBag.data5)
+    {
+        <h3>@i</h3>
+    }
+}
+
+@* @ViewData["data1"] *@
+@* <br /> *@
+@* @ViewData["data2"] *@
+@* <br /> *@
+@* @ViewData["data3"] *@
+@* <br /> *@
+
+@* @{ *@
+@*     foreach(string i in (string[])ViewData["data4"]) *@
+@*     { *@
+@*         <h3>@i</h3> *@
+@*     } *@
+
+@*     foreach (string i in (List<string>)ViewData["data5"]) *@
+@*     { *@
+@*         <h3>@i</h3> *@
+@*     } *@
+@* } *@
+
+
+
+
+
+
+
+
+
 
 @* <h1>Initial Server Time: @DateTime.Now</h1>
 <h1>Current Year is @DateTime.Now.Year</h1>

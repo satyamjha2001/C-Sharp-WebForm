@@ -1,4 +1,4 @@
-namespace ControllerAndActionsMVC.Models
+namespace ModelsInASPCore.Models
 {
     public class ErrorViewModel
     {
